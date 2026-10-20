@@ -1,0 +1,167 @@
+<!doctype html><html lang="pt-PT"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Madeira e Porto Santo · mapa 3D</title>
+<meta name="description" content="Mapa 3D da Madeira e do Porto Santo: aldeias, miradouros, levadas, praias e trajetos.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌺%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<style>
+*{box-sizing:border-box}html,body{height:100dvh;margin:0}body{font:15px system-ui,sans-serif;color:#12302a;display:flex;flex-direction:column;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+header{position:relative;z-index:5;background:linear-gradient(155deg,#072b45,#0d5c73 55%,#1f7f6b);color:#fff;padding:max(10px,env(safe-area-inset-top)) 12px 12px;box-shadow:0 4px 14px #0004}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;pointer-events:none;background:radial-gradient(circle,#ff7a59 3px,#0000 4px) 0 2px/48px 8px repeat-x,radial-gradient(circle,#ffc94d 3px,#0000 4px) 12px 2px/48px 8px repeat-x,radial-gradient(circle,#8fe3b0 3px,#0000 4px) 24px 2px/48px 8px repeat-x,radial-gradient(circle,#9bd4f5 3px,#0000 4px) 36px 2px/48px 8px repeat-x;animation:tw 2.4s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.6}to{opacity:1}}
+h1{font:700 21px Georgia,serif;margin:0 0 8px}h1::before{content:"✿ ";color:#ff9b7a;font-size:.7em}
+.row{display:flex;gap:6px;overflow-x:auto;padding:2px 0;scrollbar-width:none}.row::-webkit-scrollbar{display:none}
+.ch{flex:none;min-height:44px;border:1px solid #fff4;background:#ffffff18;color:#fff;border-radius:999px;padding:6px 13px;font:inherit;font-size:13px}.ch.on{background:#fff;color:#0d5c73}
+#q{width:100%;margin-bottom:7px;border:0;border-radius:12px;padding:10px 13px;font:inherit;font-size:16px}
+#res{position:absolute;left:12px;right:12px;top:calc(max(10px,env(safe-area-inset-top)) + 92px);background:#fff;color:#12302a;border-radius:12px;box-shadow:0 8px 30px #0005;max-height:50vh;overflow:auto;display:none;z-index:9}
+#res div{padding:10px 14px;border-bottom:1px solid #eee}#res small{color:#777}
+#wrap{flex:1;position:relative;min-height:0}#map{position:absolute;inset:0}
+.tools{position:absolute;right:10px;top:10px;z-index:4;display:flex;flex-direction:column;gap:8px}
+.tools button{width:44px;height:44px;border:0;border-radius:14px;background:#fffe;box-shadow:0 3px 12px #0004;font-size:18px;backdrop-filter:blur(8px)}.tools button.on{background:#0d5c73;color:#fff}
+.bar{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4}
+.bar button{min-height:44px;border:0;border-radius:999px;padding:12px 22px;font:600 15px system-ui;background:linear-gradient(135deg,#d9482b,#f08a4b);color:#fff;box-shadow:0 6px 18px #0006}
+.mk{display:flex;flex-direction:column;align-items:center;cursor:pointer}.mk i{font-style:normal;position:relative;width:34px;height:34px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-size:18px;box-shadow:0 3px 8px #0006;transition:transform .15s}
+.mk:hover i{transform:scale(1.18) translateY(-3px)}.mk::after{content:"";width:0;height:0;border:6px solid #0000;border-top-color:#fff;margin-top:-2px;order:1}
+.mk b{order:2;display:none;font-size:11px;font-weight:700;background:#fffe;border-radius:8px;padding:1px 6px;margin-top:1px;white-space:nowrap;box-shadow:0 1px 4px #0003}.mk.lb b{display:block}.mk.h{display:none}
+.mk.vis i{box-shadow:0 0 0 4px #2fbf71,0 3px 8px #0006}.mk.vis i::before{content:"✔";position:absolute;right:-7px;top:-7px;background:#2fbf71;color:#fff;border-radius:50%;width:18px;height:18px;font:700 11px system-ui;display:grid;place-items:center}
+.bus{font-size:32px;filter:drop-shadow(0 3px 3px #0006);pointer-events:none}
+#sh{position:absolute;left:8px;right:8px;bottom:8px;z-index:6;max-height:56%;overflow:auto;background:#fff;border-radius:24px 24px 18px 18px;box-shadow:0 12px 44px #0007;padding:8px 16px 16px;transform:translateY(120%);transition:transform .25s}#sh.o{transform:none}
+#sh::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:#ddd;margin:0 auto 10px}
+#sh h2{font:700 21px Georgia,serif;margin:0 28px 6px 0}#sh p{line-height:1.5;margin:.4em 0}.tag{display:inline-block;background:#e0f0ee;color:#0d5c73;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-right:4px}
+#sh a,#sh button.b{display:inline-block;margin:4px 6px 0 0;border:0;border-radius:12px;padding:10px 14px;font:600 14px system-ui;text-decoration:none;background:linear-gradient(135deg,#0d5c73,#1f7f6b);color:#fff}#sh a.o{background:#fff;color:#12302a;border:1px solid #ccc}
+#x{position:absolute;right:12px;top:10px;border:0;background:#0001;border-radius:50%;width:30px;height:30px}
+.tj{border-left:4px solid #d9482b;background:#f1f6f4;border-radius:12px;padding:10px 12px;margin:8px 0;cursor:pointer}.tj small{color:#677}
+#toast{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:8;background:#d9482b;color:#fff;border-radius:12px;padding:8px 14px;display:none}
+.maplibregl-ctrl-bottom-left{bottom:62px}
+@media(min-width:768px){h1{font-size:26px}#q{max-width:440px}#sh{left:auto;right:16px;bottom:16px;width:460px;max-height:72%}.tools{top:16px;right:16px}.tools button{width:54px;height:54px;font-size:21px}.bar button{font-size:17px;padding:14px 26px}.mk i{width:42px;height:42px;font-size:22px}.mk b{font-size:13px}}
+@media(max-height:480px) and (orientation:landscape){h1{display:none}#sh{left:auto;width:400px;right:8px;max-height:80%}}
+@media(prefers-reduced-motion:reduce){header::after{animation:none}}
+</style></head><body>
+<header><h1>Madeira e Porto Santo</h1><input id="q" placeholder="🔎 Pesquisar vila, miradouro, praia, levada…" autocomplete="off"><div class="row" id="ch"></div></header>
+<div id="res"></div>
+<div id="wrap"><div id="map"></div><div id="toast"></div>
+<div class="tools"><button id="b3" class="on" title="Inclinar 3D">🧊</button><button id="bo" title="Rodar">↻</button><button id="bs" title="Estilo do mapa">🗺</button></div>
+<div class="bar"><button id="bt">🧭 Trajetos</button></div>
+<div id="sh"><button id="x" aria-label="Fechar">✕</button><div id="shc"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+// tipo → [cor, emoji, legenda, prioridade do rótulo]
+const K={air:['#1767b5','✈️','Aeroporto',0],city:['#0d5c73','🏙️','Cidade',0],vil:['#d9822b','🏡','Vila / aldeia',1],port:['#1767b5','⛴️','Porto / marina',2],view:['#2a7f62','🌄','Miradouro',2],nat:['#2f8a57','🌿','Natureza',2],hike:['#1b7f5c','🥾','Levada / trilho',2],beach:['#e0a82e','🏖️','Praia / mar',2],cult:['#6a4c93','⛪','Cultura',3]};
+// id,nome,tipo,lat,lon,descrição,como chegar
+const D=[
+['fnc','Aeroporto da Madeira (Cristiano Ronaldo)','air',32.6979,-16.7745,'Aeroporto principal, em Santa Cruz, com uma das pistas mais espetaculares da Europa.','Aerobus/autocarros 113 e 20 até ao Funchal (~25–35 min). Táxi ou carro de aluguer à porta.'],
+['fun','Funchal','city',32.6669,-16.9241,'Capital da Madeira: anfiteatro sobre o mar, marina, Zona Velha, mercados e jardins. Boa base para a ilha.','Autocarros Horários do Funchal na cidade; teleférico para o Monte.'],
+['mer','Mercado dos Lavradores','cult',32.6505,-16.9062,'Frutas tropicais, flores e peixe-espada preto. Melhor de manhã, de segunda a sábado.','A pé do centro do Funchal.'],
+['zv','Zona Velha e Rua de Santa Maria','cult',32.6470,-16.9060,'Ruas com portas pintadas, restaurantes e bares junto ao mar.','A pé do centro.'],
+['sev','Sé do Funchal','cult',32.6486,-16.9078,'Catedral do século XV com teto de madeira de estilo mudéjar.','A pé.'],
+['tel','Teleférico do Funchal','port',32.6461,-16.9034,'Sobe da Zona Velha até ao Monte (~15 min) sobre telhados e bananais.','A pé desde a marina.'],
+['mon','Monte','vil',32.6750,-16.8955,'Igreja de Nossa Senhora do Monte, jardins tropicais e os carros de cesto.','Teleférico ou autocarro 20/21 desde o Funchal.'],
+['jb','Jardim Botânico da Madeira','nat',32.6650,-16.8955,'Jardim com vista sobre a baía do Funchal e milhares de espécies.','Autocarro 29/30/31 ou táxi.'],
+['pb','Pico dos Barcelos','view',32.6590,-16.9420,'Miradouro sobre o Funchal e a baía, óptimo ao fim da tarde.','Autocarro 4 ou carro.'],
+['cl','Câmara de Lobos','vil',32.6497,-16.9770,'Aldeia de pescadores que Churchill pintou. Prova a poncha e o peixe-espada.','Autocarro 1/4 desde o Funchal (~20 min).'],
+['cg','Cabo Girão','view',32.6560,-17.0045,'Um dos maiores promontórios da Europa (~580 m), com skywalk de vidro.','Autocarro Rodoeste ou carro. Confirmar horários.'],
+['rb','Ribeira Brava','vil',32.6733,-17.0640,'Vila costeira com paredão, igreja de São Bento e museu etnográfico.','Autocarro Rodoeste desde o Funchal (~40 min).'],
+['ps','Ponta do Sol','vil',32.6800,-17.1030,'A vila mais soalheira da ilha, com seixos e pôr do sol famoso.','Autocarro Rodoeste desde o Funchal (~50 min).'],
+['cal','Calheta','vil',32.7210,-17.1760,'Praia de areia dourada importada, marina e engenhos de cana-de-açúcar.','Autocarro Rodoeste desde o Funchal (~1h).'],
+['pp','Ponta do Pargo (Farol)','view',32.8087,-17.2650,'Farol no extremo ocidental da ilha, a mais de 300 m sobre o Atlântico.','Só de carro ou táxi. Confirmar acessos.'],
+['rab','Rabaçal e 25 Fontes','hike',32.7556,-17.1313,'Levada do Risco e das 25 Fontes: cascatas e laurissilva Património Mundial.','Carro até à Rabaçal e a pé (~1h30–3h). Reservar/confirmar entradas.'],
+['fan','Fanal','nat',32.8080,-17.1570,'Floresta de til milenares quase sempre envoltos em nevoeiro.','Estrada desde Ribeira da Janela ou Paul da Serra (só de carro).'],
+['pm','Porto Moniz','vil',32.8663,-17.1690,'Piscinas naturais de lava no mar e ilhéu Mole.','Autocarro Rodoeste (~1h45) ou carro via Encumeada.'],
+['sx','Seixal','vil',32.8265,-17.1070,'Praias de areia negra, cascata e bananais na costa norte.','Carro ou autocarro desde Porto Moniz.'],
+['sv','São Vicente','vil',32.7990,-17.0430,'Vila verde com grutas e vulcanismo. Começa aqui a EN 101 até Santana.','Autocarro Rodoeste desde o Funchal (~1h15).'],
+['enc','Encumeada','view',32.7480,-17.0200,'Passo de montanha onde se vê o norte e o sul da ilha ao mesmo tempo.','Carro ou autocarro Rodoeste para São Vicente.'],
+['ar','Pico do Arieiro','nat',32.7358,-16.9290,'Terceiro pico mais alto (1818 m). Nascer do sol sobre o mar de nuvens.','Táxi/carro do Funchal (~40 min) ou tour. Leva casaco.'],
+['pr','Pico Ruivo','nat',32.7587,-16.9423,'O ponto mais alto da Madeira (1862 m). Trilho clássico desde o Arieiro (PR1).','A pé desde o Arieiro (~3h ida) ou Achada do Teixeira (mais curto).'],
+['eira','Eira do Serrado','view',32.7141,-16.9660,'Miradouro sobre o Curral das Freiras, vale vulcânico.','Autocarro 81 desde o Funchal ou carro.'],
+['cf','Curral das Freiras','vil',32.7250,-16.9610,'Aldeia escondida no vale, famosa pelas castanhas.','Autocarro 81 (túnel) desde o Funchal.'],
+['san','Santana','vil',32.8030,-16.8810,'Casas triangulares de colmo (palheiros) e parque temático.','Autocarro SAM/Rodoeste desde o Funchal (~1h15).'],
+['fai','Faial','vil',32.7770,-16.8450,'Costa norte, Penha d\'Águia e a praia do Faial.','Autocarro SAM desde o Funchal.'],
+['caq','Levada do Caldeirão Verde','hike',32.7930,-16.8920,'Percurso em laurissilva até uma cascata de 100 m. Partida no Parque das Queimadas.','Carro desde Santana. Lanterna e calçado impermeável.'],
+['mac','Machico','vil',32.7190,-16.7670,'Primeiro povoado da ilha, igreja manuelina e praia.','Autocarro 113/156 desde o Funchal (~45 min).'],
+['pre','Praia de Machico','beach',32.7195,-16.7640,'Areia clara, paredão e pôr do sol no miradouro do Facho.','A pé do centro de Machico.'],
+['psl','Ponta de São Lourenço','nat',32.7440,-16.7010,'Península árida com falésias vermelhas. Trilho PR8 (~3h, sem sombra).','Carro até Baía d\'Abra, ou autocarro para Caniçal e a pé.'],
+['can','Caniçal','vil',32.7380,-16.7370,'Antiga vila baleeira, museu da baleia e Prainha, a única praia natural de areia escura.','Autocarro 113 desde o Funchal.'],
+['sc','Santa Cruz','vil',32.6880,-16.7940,'Vila junto ao aeroporto, com passeio marítimo e pequenas esplanadas.','Autocarro 20/113.'],
+['crg','Cristo Rei (Garajau)','view',32.6410,-16.8370,'Estátua sobre as falésias. Teleférico até à praia e reserva marinha.','Autocarro 155 desde o Funchal.'],
+['cam','Camacha','vil',32.6785,-16.8450,'Terra do vime e dos folclóricos madeirenses.','Autocarro 77/20 desde o Funchal.'],
+// Porto Santo
+['ps_a','Aeroporto do Porto Santo','air',33.0734,-16.3500,'Aeroporto da ilha, a ~3 km da vila.','Táxi ou autocarro 3 desde Vila Baleira.'],
+['ps_v','Vila Baleira','city',33.0570,-16.3400,'Capital do Porto Santo, com praça, esplanadas e passeio marítimo.','A pé do cais e da praia.'],
+['ps_c','Casa de Colombo','cult',33.0575,-16.3405,'Museu dedicado a Cristóvão Colombo, que viveu na ilha.','A pé desde a praça da Vila.'],
+['ps_p','Praia Dourada','beach',33.0450,-16.3450,'Mais de 9 km de areia dourada e águas calmas.','A pé desde Vila Baleira.'],
+['ps_cais','Cais do Porto Santo','port',33.0540,-16.3375,'Chegada do ferry Lobo Marinho desde o Funchal (~2h15).','A pé ou táxi até à vila.'],
+['ps_pc','Pico do Castelo','view',33.0750,-16.3590,'Miradouro 437 m com vista sobre toda a ilha e a praia.','Carro ou trilho desde a estrada.'],
+['ps_pf','Pico do Facho','view',33.0620,-16.3090,'Pequeno pico para ver o nascer do sol.','Carro e curta caminhada.'],
+['ps_cal','Ponta da Calheta','beach',33.0070,-16.3850,'Extremo sudoeste com falésias, bares e mar calmo.','Carro, táxi ou autocarro até à Calheta.']
+];
+// modo, nome, paragens, info
+const L=[
+['bus','Aeroporto – Funchal (Aerobus / 113)',['fnc','fun'],'~25–35 min. Confirmar horários.'],
+['bus','Funchal – Câmara de Lobos – Cabo Girão',['fun','cl','cg'],'Autocarros Horários do Funchal e Rodoeste.'],
+['bus','Funchal – Ribeira Brava – Ponta do Sol – Calheta',['fun','rb','ps','cal'],'Rodoeste, costa sul.'],
+['bus','Calheta – Porto Moniz',['cal','pm'],'Rodoeste, via Paul da Serra ou costa. Confirmar.'],
+['bus','Porto Moniz – Seixal – São Vicente',['pm','sx','sv'],'Costa norte.'],
+['bus','Funchal – Santana – São Vicente',['fun','san','sv'],'SAM/Rodoeste, via Faial/Santana.'],
+['bus','Funchal – Machico – Caniçal',['fun','mac','can'],'Autocarros 113 e 156.'],
+['sea','Ferry Funchal – Porto Santo (Lobo Marinho)',['fun','ps_cais'],'~2h15. Reservar com antecedência.'],
+['bus','Porto Santo: Cais – Vila Baleira – Aeroporto',['ps_cais','ps_v','ps_a'],'Autocarro 3, táxi ou a pé.']
+];
+const TJ=[ // título, duração, texto, linhas, destino
+['Aeroporto → Funchal','~30 min','Autocarro 113/20 (Aerobus) ou táxi.',[0],'fun'],
+['Funchal → Cabo Girão','~45 min','Autocarro Rodoeste ou carro, parando em Câmara de Lobos.',[1],'cg'],
+['Costa sul até à Calheta','~1h30','Rodoeste via Ribeira Brava e Ponta do Sol.',[2],'cal'],
+['Calheta → Porto Moniz','~50 min','Estrada panorâmica pela costa oeste.',[3],'pm'],
+['Costa norte: Porto Moniz → São Vicente','~45 min','Seixal e a Encumeada ao lado.',[4],'sx'],
+['Funchal → Santana','~1h15','Autocarro da costa norte, depois Caldeirão Verde.',[5],'san'],
+['Funchal → Machico → Caniçal','~1h','Para São Lourenço e Prainha.',[6],'mac'],
+['Funchal → Porto Santo','~2h15','Ferry diário. Reserva com antecedência.',[7],'ps_cais'],
+['Dentro do Porto Santo','~15 min','Cais, Vila Baleira e aeroporto.',[8],'ps_v']
+];
+const $=i=>document.getElementById(i);
+const ALL=D.map(d=>({id:d[0],n:d[1],lat:d[3],lon:d[4],em:K[d[2]][1],col:K[d[2]][0],pr:K[d[2]][3],d:d[5],h:d[6],tp:K[d[2]][2],nat:['nat','hike','view','beach'].includes(d[2])}));
+const byId={};ALL.forEach(a=>byId[a.id]=a);
+let ST={};try{ST=JSON.parse(localStorage.getItem('madeira_v')||'{}')}catch(e){}const sv=()=>{try{localStorage.setItem('madeira_v',JSON.stringify(ST))}catch(e){}};
+const STY=['liberty','bright','positron'].map(s=>'https://tiles.openfreemap.org/styles/'+s);let si=0,HL=[],NO=0,orb=0;
+const map=new maplibregl.Map({container:'map',style:STY[0],center:[-16.95,32.75],zoom:8.8,pitch:55,bearing:-10,maxZoom:20,maxPitch:80,attributionControl:{compact:true}});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
+map.addControl(new maplibregl.GeolocateControl({positionOptions:{enableHighAccuracy:true},trackUserLocation:true,showUserLocation:true}),'top-left');
+map.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-left');
+const LC={bus:'#e08a1e',sea:'#1767b5'};
+const geo=()=>({type:'FeatureCollection',features:L.map((l,i)=>({type:'Feature',properties:{i,m:l[0]},geometry:{type:'LineString',coordinates:l[2].map(id=>[byId[id].lon,byId[id].lat])}}))});
+const paintHL=()=>{if(map.getLayer('rl'))map.setPaintProperty('rl','line-opacity',HL.length?['case',['in',['get','i'],['literal',HL]],1,.1]:1)};
+map.on('style.load',()=>{
+ if(!map.getSource('dem')){map.addSource('dem',{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:14})}
+ try{map.setTerrain({source:'dem',exaggeration:1.5})}catch(e){}
+ if(!map.getSource('r')){map.addSource('r',{type:'geojson',data:geo()});
+ map.addLayer({id:'rc',type:'line',source:'r',paint:{'line-color':'#fff','line-width':['interpolate',['linear'],['zoom'],8,5,15,10],'line-opacity':.85},layout:{'line-cap':'round'}});
+ map.addLayer({id:'rl',type:'line',source:'r',paint:{'line-color':['match',['get','m'],'sea',LC.sea,LC.bus],'line-width':['interpolate',['linear'],['zoom'],8,2.5,15,5]},layout:{'line-cap':'round'}})}paintHL()});
+map.on('error',()=>{const t=$('toast');t.textContent='Sem ligação aos mapas. Verifica a internet.';t.style.display='block';setTimeout(()=>t.style.display='none',4000)});
+ALL.forEach(a=>{const e=document.createElement('div');e.className='mk';e.innerHTML=`<i style="background:${a.col}">${a.em}</i><b>${a.n.split(' (')[0]}</b>`;e.onclick=ev=>{ev.stopPropagation();show(a,1)};a.e=e;new maplibregl.Marker({element:e,anchor:'bottom'}).setLngLat([a.lon,a.lat]).addTo(map)});
+const mk3=()=>ALL.forEach(a=>a.e.classList.toggle('vis',!!ST[a.id]));mk3();
+const vis=()=>{const z=map.getZoom();ALL.forEach(a=>{a.e.classList.toggle('h',z<[0,9.5,10.5,12,13.5][a.pr]||(NO&&!a.nat));a.e.classList.toggle('lb',z>=12)})};map.on('zoom',vis);vis();
+function show(a,fly){if(fly)map.flyTo({center:[a.lon,a.lat],zoom:Math.max(map.getZoom(),a.pr==0?13.5:15.5),pitch:62,bearing:map.getBearing()+25,duration:2200});
+ const q=encodeURIComponent(a.n+', Madeira, Portugal');
+ $('shc').innerHTML=`<h2>${a.em} ${a.n}</h2><span class="tag">${a.tp}</span><p>${a.d}</p>${a.h?`<p><b>Como chegar:</b> ${a.h}</p>`:''}<a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${q}">🚗 Ir</a><a class="o" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${q}">🗺 Google Maps</a><a class="o" target="_blank" rel="noopener" href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${a.lat},${a.lon}">👁 Street View</a><button class="b" id="vb" onclick="tg('${a.id}')">${ST[a.id]?'✔ Visitado':'☐ Já visitei'}</button>`;$('sh').classList.add('o')}
+window.tg=id=>{ST[id]=!ST[id];sv();mk3();$('vb').textContent=ST[id]?'✔ Visitado':'☐ Já visitei'};
+$('x').onclick=()=>$('sh').classList.remove('o');map.on('click',()=>$('sh').classList.remove('o'));
+// chips
+const J=[['fun','Funchal'],['pm','Porto Moniz'],['san','Santana'],['mac','Machico'],['ar','Pico do Arieiro'],['cal','Calheta'],['cl','Câmara de Lobos'],['psl','São Lourenço'],['ps_v','Porto Santo']];
+$('ch').innerHTML=J.map(j=>`<button class="ch" data-j="${j[0]}">🔎 ${j[1]}</button>`).join('')+'<button class="ch" id="cm">🌿 Só natureza</button>';
+$('ch').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id=='cm'){NO=!NO;b.classList.toggle('on',!!NO);vis();return}const a=byId[b.dataset.j];map.flyTo({center:[a.lon,a.lat],zoom:a.id=='ps_v'?13.2:14,pitch:64,bearing:map.getBearing()+30,duration:2800})};
+// pesquisa
+const q=$('q'),r=$('res');q.oninput=()=>{const v=q.value.trim().toLowerCase();if(v.length<2){r.style.display='none';return}const m=ALL.filter(a=>a.n.toLowerCase().includes(v)).slice(0,8);r.innerHTML=m.map(a=>`<div data-i="${ALL.indexOf(a)}">${a.em} ${a.n} <small>${a.tp}</small></div>`).join('')||'<div>Sem resultados</div>';r.style.display='block'};
+r.onclick=e=>{const d=e.target.closest('[data-i]');if(!d)return;r.style.display='none';q.value='';q.blur();show(ALL[d.dataset.i],1)};
+// ferramentas
+$('b3').onclick=e=>{const on=map.getPitch()<10;map.easeTo({pitch:on?62:0,bearing:on?map.getBearing():0,duration:900});e.currentTarget.classList.toggle('on',on)};
+$('bo').onclick=e=>{orb=!orb;e.currentTarget.classList.toggle('on',!!orb);const f=()=>{if(!orb)return;map.setBearing(map.getBearing()+.12);requestAnimationFrame(f)};if(orb)f()};
+map.on('dragstart',()=>{orb=0;$('bo').classList.remove('on')});
+$('bs').onclick=()=>{si=(si+1)%3;map.setStyle(STY[si])};
+// trajetos + marcador animado
+let sa=null,raf=0;
+function bus(c,emoji){cancelAnimationFrame(raf);if(!c.length)return;if(!sa){const e=document.createElement('div');e.className='bus';sa=new maplibregl.Marker({element:e}).setLngLat(c[0]).addTo(map)}sa.getElement().textContent=emoji;
+ const n=c.length-1,dur=4500*n,t0=performance.now();const f=t=>{const u=((t-t0)%dur)/dur*n,i=Math.min(n-1,Math.floor(u)),k=u-i;sa.setLngLat([c[i][0]+(c[i+1][0]-c[i][0])*k,c[i][1]+(c[i+1][1]-c[i][1])*k]);raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)}
+function route(i){const t=TJ[i];HL=t[3];paintHL();let c=[];t[3].forEach(li=>c=c.concat(L[li][2].map(id=>[byId[id].lon,byId[id].lat])));
+ const b=c.reduce((b,p)=>b.extend(p),new maplibregl.LngLatBounds(c[0],c[0]));map.fitBounds(b,{padding:{top:60,bottom:260,left:50,right:60},pitch:45,duration:1800,maxZoom:12.5});bus(c,L[t[3][0]][0]=='sea'?'⛴️':'🚌');
+ $('shc').innerHTML=`<h2>🧭 ${t[0]}</h2><span class="tag">${t[1]}</span><p>${t[2]}</p><p style="font-size:12px;color:#677">Confirma sempre linhas e horários nos operadores locais.</p><button class="b" onclick="lista()">← Todos os trajetos</button>`}
+function lista(){HL=[];paintHL();cancelAnimationFrame(raf);if(sa){sa.remove();sa=null}$('shc').innerHTML='<h2>🧭 Trajetos</h2>'+TJ.map((t,i)=>`<div class="tj" onclick="route(${i})"><b>${t[0]}</b><br><small>${t[1]}</small></div>`).join('');$('sh').classList.add('o')}
+$('bt').onclick=lista;
+</script></body></html>
